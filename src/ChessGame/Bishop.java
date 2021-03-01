@@ -12,8 +12,8 @@ public class Bishop extends AbstractChessPiece{
                 && moveDiagonal(row, col);
     }
 
-    @Override
-    public String toString() {
-        return String.format("%sBishop", getColor());
-    }
+//    @Override
+//    public String toString() {
+//        return String.format("%sBishop", getColor());
+//    }
 }

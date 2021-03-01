@@ -12,8 +12,8 @@ public class Knight extends AbstractChessPiece{
                 && moveLPattern(row, col);
     }
 
-    @Override
-    public String toString() {
-        return String.format("%sKnight", getColor());
-    }
+//    @Override
+//    public String toString() {
+//        return String.format("%sKnight", getColor());
+//    }
 }

@@ -31,12 +31,18 @@ public abstract class AbstractChessPiece implements ChessPiece{
     @Override
     public Integer getColumn(){
         return this.column;
-    };
+    }
 
     @Override
     public Color getColor(){
         return this.color;
-    };
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%s%s", this.getColor().initial(),
+                    this.getClass().getSimpleName());
+    }
 
     public void killed(){
         this.alive = false;
@@ -58,20 +64,11 @@ public abstract class AbstractChessPiece implements ChessPiece{
 
     public boolean moveDiagonal(int row, int col){
 //        System.out.println("checking moveDiagonal");
-        if (this.getColumn() == col){
-            return false;
-        }
-        return Math.abs((this.getRow() - row) / (this.getColumn() - col)) == 1;
+        return Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - col);
     }
 
     public static int getIncrement(int a, int b){
-        if (a < b) {
-            return 1;
-        } else if (a == b){
-            return 0;
-        } else {
-            return -1;
-        }
+        return Integer.compare(b, a);
     }
 
     /**
@@ -94,7 +91,7 @@ public abstract class AbstractChessPiece implements ChessPiece{
             pieces.add(row);
             pieces.add(col);
             path.add(pieces);
-            System.out.println("added " + row + ", " + col);
+//            System.out.println("added " + row + ", " + col);
         }
         return path;
     }
@@ -162,12 +159,12 @@ public abstract class AbstractChessPiece implements ChessPiece{
      * Return true if this piece can move to the target position
      * and a piece of different color is currently on that position
      * ALL CHESS PIECES EXCEPT PAWN SHARE THIS METHOD
-     * @param other the target piece
+     * @param row the row index of the victim
+     * @param col the col index of the victim
      * @return either this piece can kill the other piece
      */
-    public boolean canKill(ChessPiece other){
-        return canMove(other.getRow(), other.getColumn())
-                && other.getColor() != this.getColor();
+    public boolean canKill(int row, int col){
+        return canMove(row, col);
     }
 
 }

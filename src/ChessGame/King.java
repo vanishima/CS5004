@@ -14,8 +14,8 @@ public class King extends AbstractChessPiece {
                 moveAnyDirection(row, col);
     }
 
-    @Override
-    public String toString() {
-        return String.format("%sKing", getColor());
-    }
+
+//    public String toString() {
+//        return String.format("%sKing", getColor());
+//    }
 }

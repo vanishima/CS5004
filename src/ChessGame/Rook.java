@@ -14,8 +14,8 @@ public class Rook extends AbstractChessPiece{
                 && moveHorizontalOrVertical(row, col);
     }
 
-    @Override
-    public String toString() {
-        return String.format("%sRook", getColor());
-    }
+//    @Override
+//    public String toString() {
+//        return String.format("%sRook", getColor());
+//    }
 }

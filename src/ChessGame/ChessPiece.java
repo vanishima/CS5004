@@ -12,11 +12,13 @@ public interface ChessPiece {
 
     boolean canMove(int row, int col);
 
-    boolean canKill(ChessPiece other);
+    boolean canKill(int row, int col);
+
+    boolean isAlive();
 
     void move(int row, int col);
 
     void killed();
 
-    public List<List<Integer>> positionInBetween(int row, int col);
+    List<List<Integer>> positionInBetween(int row, int col);
 }
