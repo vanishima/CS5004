@@ -281,12 +281,15 @@ public class ChessGame {
         System.out.println("\n");
     }
 
+    /**
+     * A method to simulate a chess game
+     * @param args
+     */
     public static void main(String[] args){
         ChessGame game = new ChessGame();
         game.printBoard();
         ChessPiece whiteQueen = game.getPiece(0,4); // row and col is opposite in board
         ChessPiece blackPawn = game.getPiece(6, 4);
-
 
         while (!game.hasWinner()){
             game.play();
@@ -297,10 +300,15 @@ public class ChessGame {
 //        game.moveOnBoard(whiteQueen, 0, 3);
 //
 //        ChessPiece whiteKnight = game.getPiece(0,1);
-//        game.moveOnBoard(whiteKnight, 2, 0);
+//        if (game.canMoveOnBoard(whiteKnight, 2, 0)){
+//            game.moveOnBoard(whiteKnight, 2, 0);
+//        }
 //        ChessPiece blackBishop = game.getPiece(7,5);
-//        game.toKill(blackBishop, whiteKnight);
-        game.printBoard();
+//        if (game.canKill(blackBishop, whiteKnight.getRow(), whiteKnight.getColumn())){
+//            game.moveOnBoard(blackBishop, whiteKnight.getRow(), whiteKnight.getColumn());
+//        }
+
+//        game.printBoard();
     }
 
 
