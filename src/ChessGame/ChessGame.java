@@ -1,14 +1,18 @@
 package ChessGame;
 
-//import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
+/**
+ * A class that represents a Chess game with two ChessPiece as white king
+ * and black king, an integer to indicate the current player, and a 2D array
+ * that stores all pieces currently on the board (ie. currently alive)
+ */
 public class ChessGame {
     private ChessPiece whiteKing;
     private ChessPiece blackKing;
-    private Integer currentPlayer;
+    private Integer currentPlayer; // 1 is white, -1 is black
     // A 2D Array list to store pieces
     private ChessPiece[][] board = new ChessPiece[8][8];
 
@@ -21,24 +25,8 @@ public class ChessGame {
         this.initializePieces(Color.WHITE);
         this.initializePieces(Color.BLACK);
         // randomly assign a player
-        Random rand = new Random();
-        this.currentPlayer = rand.nextInt(2);
-        this.currentPlayer = (this.currentPlayer == 0) ? -1:1;
-    }
-
-    public Color getCurrentPlayer(){
-        if (this.currentPlayer == -1){
-            return Color.BLACK;
-        } else if (this.currentPlayer == 1){
-            return Color.WHITE;
-        } else {
-            System.out.println("There is something wrong with currentPlayer");
-            return null;
-        }
-    }
-
-    public void changePlayer(){
-        this.currentPlayer *= -1;
+        Random rand = new Random(System.nanoTime());
+        this.currentPlayer = (rand.nextInt(2) == 0) ? -1:1;
     }
 
     /**
@@ -73,86 +61,59 @@ public class ChessGame {
         }
     }
 
-    public boolean noPiecesInBetween(List<List<Integer>> position){
-        if (position.size() == 0 || position.get(0).size() == 0){
-            return true;
-        }
-        for (List<Integer> piece : position){
-//            System.out.println(piece.get(0) + "," + piece.get(1));
-            if (this.board[piece.get(0)][piece.get(1)] != null){
-                System.out.println("Piece on " + piece.get(0) + ", " +
-                                    piece.get(1) + " is in between!");
-                return false;
-            }
-        }
-        return true;
-    }
+    /**
+     * Allows the current user to choose a piece and move it
+     * to a valid destination. The piece will kill an opponent's piece
+     * if that piece is on it's destination.
+     */
+    public void play(){
+        System.out.println("====== It's " + getCurrentPlayerColor() + " player's turn =====");
 
-    public void moveOnBoard(ChessPiece target, int row, int col){
-        if (!canMoveOnBoard(target, row, col)){
-            System.out.println("You cannot move " + target + " to " + row + ", " + col);
-            return;
-        }
-        System.out.println("move " + target + " to " + row + ", " + col);
-        kill(target, row, col);
-        board[row][col] = target;
-        board[target.getRow()][target.getColumn()] = null;
-        target.move(row, col);
-    }
+        ChessPiece target = askForChessPiece();  // get a valid chess piece
+        int[] position = askForDestination(target);  // get a valid destination position
+        moveOnBoard(target, position[0], position[1]);  // move the chess piece to that position
 
-    public boolean canMoveOnBoard(ChessPiece target, int row, int col){
-        // 1) It has to be a different position than the current one
-        if (target.getRow().equals(row) && target.getColumn().equals(col)){
-            System.out.println("You need to move to a different position");
-            return false;
-        }
-        // 2) the target should be able to move or kill in that direction
-        if (!target.canMove(row, col) || ! canKill(target, row, col)) {
-            System.out.println("This piece cannot move to that position!");
-            return false;
-        }
-        // if the target is Knight, we don't need to check if there are
-        // pieces in between
-        if (target.getClass() == Knight.class){
-            return true;
-        }
-        // 3) for other pieces, there should be no pieces in between
-        List<List<Integer>> piecesInBetween = target.positionInBetween(row, col);
-        return noPiecesInBetween(piecesInBetween);
+        System.out.println("\n\n\n\n\n\n");
+        printBoard();
+        changePlayer();  // change the turn to the opponent
     }
 
     /**
-     * Check whether the killer piece can kill the victim
-     * @param killer the killer piece
-     * @param row the row index of the victim
-     * @param col the col index of the victim
-     * @return true if killer can kill the victim, false otherwise
+     * Return the color enum type of the current player
+     * @return the color enum type of the current player
      */
-    public boolean canKill(ChessPiece killer, int row, int col){
-        ChessPiece victim = getPiece(row, col);
-        // if there is no piece on that position, return true
-        if (victim == null){ return true; }
-        // the knight can move on board as long as it's L pattern
-        if (killer.getColor() == victim.getColor()){
-            System.out.println("You cannot kill the same color piece");
-            return false;
-        }
-        // for other pieces, there should be no pieces in between
-        return killer.canKill(row, col);
+    public Color getCurrentPlayerColor(){
+        return (this.currentPlayer == -1) ? Color.BLACK : Color.WHITE;
     }
 
     /**
-     * Moves the killer to victim's position and remove victim from the board
-     * @param killer the killer ChessPiece
-     * @param row the row index of victim
-     * @param col the col index of victim
+     * Change current player to another player by multiplying -1
      */
-    public void kill(ChessPiece killer, int row, int col){
-        ChessPiece victim = getPiece(row, col);
-        if (victim != null){
-            System.out.println(victim + " is killed");
-            victim.killed();
+    public void changePlayer(){
+        this.currentPlayer *= -1;
+    }
+
+    /**
+     * Asks the user to choose a valid ChessPiece that is on the board
+     * and belongs to the current player
+     * @return the chosen ChessPiece
+     */
+    public ChessPiece askForChessPiece(){
+        System.out.println("Choose a piece to move");
+        Scanner keyboard = new Scanner(System.in);
+        int row = keyboard.nextInt();
+        int col = keyboard.nextInt();
+        ChessPiece target = getPiece(row, col);
+
+        // Keep asking until the player chooses his/her own piece
+        while (target == null || target.getColor() != getCurrentPlayerColor()){
+            System.out.println("Please choose a valid " + getCurrentPlayerColor() + " piece (eg. 1, 7)");
+            row = keyboard.nextInt();
+            col = keyboard.nextInt();
+            target = getPiece(row, col);
         }
+        System.out.println("You chose a " + target);
+        return target;
     }
 
     /**
@@ -161,7 +122,7 @@ public class ChessGame {
      * @param col the column index
      * @return the chess piece on that position
      */
-    public ChessPiece getPiece(int row, int col) throws IllegalArgumentException{
+    public ChessPiece getPiece(int row, int col){
         if (!AbstractChessPiece.withinRange(row, col)){
             System.out.println("The index is out of range.");
             return null;
@@ -173,29 +134,17 @@ public class ChessGame {
         }
     }
 
-
-    public void play(){
-        System.out.println("====== It's " + this.getCurrentPlayer() +
-                        " player's turn =====");
-        System.out.println("Choose a piece to move");
-
+    /**
+     * Asks the user to choose a valid pair of row and column destination
+     * to move the target piece
+     * @param target the piece to be moved
+     * @return the pair of row and column destination as a list
+     */
+    public int[] askForDestination(ChessPiece target){
+        System.out.println("Choose a position to move to");
         Scanner keyboard = new Scanner(System.in);
         int row = keyboard.nextInt();
         int col = keyboard.nextInt();
-        ChessPiece target = getPiece(row, col);
-
-        // Keep asking until the player chooses his/her own piece
-        while (target == null || target.getColor() != this.getCurrentPlayer()){
-//            System.out.println("target: " + target.getColor());
-//            System.out.println("current: " + this.getCurrentPlayer());
-            System.out.println("Please choose a valid " +
-                                this.getCurrentPlayer() + " piece (eg. 1, 7)");
-            row = keyboard.nextInt();
-            col = keyboard.nextInt();
-            target = getPiece(row, col);
-        }
-        System.out.println("You chose a " + target +
-                        ". Choose a position to move to.");
 
         // Keep asking until the piece can move to destination
         while(!canMoveOnBoard(target, row, col)){
@@ -203,9 +152,100 @@ public class ChessGame {
             row = keyboard.nextInt();
             col = keyboard.nextInt();
         }
-        moveOnBoard(target, row, col);
-        printBoard();
-        changePlayer();
+        return new int[] {row, col};
+    }
+
+    /**
+     * Checks whether a piece can move to the target position
+     * @param target the piece to be moved
+     * @param row the target row index
+     * @param col the target column index
+     * @return true if the piece can move to the target position, false otherwise
+     */
+    public boolean canMoveOnBoard(ChessPiece target, int row, int col){
+        // a different position
+        if (target.getRow().equals(row) && target.getColumn().equals(col)){
+            System.out.println("You need to move to a different position");
+            return false;
+        }
+
+        // can move or kill in that direction
+        if (!target.canMove(row, col) || !canKill(target, row, col)) {
+            System.out.println("This piece cannot move to that position!");
+            return false;
+        }
+
+        if (target.getClass() == Knight.class){ return true; } // no need to check if the target is Knight
+        return noPiecesInBetween(target, row, col);  // no pieces in between on the path
+    }
+
+    /**
+     * Check whether the killer piece can kill the victim
+     * @param killer the killer piece
+     * @param row the row index of the victim
+     * @param col the col index of the victim
+     * @return true if killer can kill the victim, false otherwise
+     */
+    public boolean canKill(ChessPiece killer, int row, int col){
+        ChessPiece victim = getPiece(row, col);
+        if (victim == null){ return true; } // if no piece on that position, return true
+
+        if (killer.sameColor(victim)){ // the piece should be of different color
+            System.out.println("You cannot kill the same color piece");
+            return false;
+        }
+
+        return killer.canKill(row, col); // if the piece can kill in that direction
+    }
+
+    /**
+     * Checks whether there are pieces on the given list of position indexes
+     * @param target the piece to be moved
+     * @param row the target row index
+     * @param col the target column index
+     * @return true if there are no pieces on the given positions, false otherwise
+     */
+    public boolean noPiecesInBetween(ChessPiece target, int row, int col){
+        List<List<Integer>> piecesInBetween = target.positionInBetween(row, col);
+        if (piecesInBetween.size() == 0 || piecesInBetween.get(0).size() == 0){
+            return true;
+        }
+        for (List<Integer> piece : piecesInBetween){
+            if (getPiece(piece.get(0), piece.get(1)) != null){ // if there is a piece on any between position
+                System.out.println("Piece on " + piece.get(0) + ", " +
+                        piece.get(1) + " is in between!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Move the piece and kill the opponent's piece if it exists.
+     * @param target the ChessPiece to be moved
+     * @param row the target row index
+     * @param col the target column index
+     */
+    public void moveOnBoard(ChessPiece target, int row, int col){
+        System.out.println("move " + target + " to " + row + ", " + col);
+        kill(target, row, col);
+        board[row][col] = target;
+        board[target.getRow()][target.getColumn()] = null;
+        target.move(row, col);
+    }
+
+    /**
+     * Change the alive status of the victim to false if there is a piece
+     * @param killer the killer ChessPiece
+     * @param row the row index of victim
+     * @param col the col index of victim
+     */
+    public void kill(ChessPiece killer, int row, int col){
+        ChessPiece victim = getPiece(row, col);
+        if (victim != null){
+            System.out.println(victim + " is killed");
+            victim.killed();
+        }
     }
 
     /**
@@ -221,7 +261,7 @@ public class ChessGame {
      * Displays the current board.
      */
     public void printBoard() {
-        System.out.println("========================================");
+        System.out.println("========================================\n");
         for (int i = 7; i >= 0; i--) {
             System.out.printf("%d   ", i);
             for (int j = 0; j <= 7; j++) {
