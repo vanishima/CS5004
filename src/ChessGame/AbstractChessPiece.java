@@ -8,8 +8,8 @@ import java.util.List;
  * color, and a boolean called alive
  */
 public abstract class AbstractChessPiece implements ChessPiece{
-    protected Integer row;
-    protected Integer column;
+    protected Integer row = 0;
+    protected Integer column = 0;
     protected Color color;
     protected boolean alive = true; // default is alive
 
@@ -176,7 +176,6 @@ public abstract class AbstractChessPiece implements ChessPiece{
      */
     public abstract boolean canMove(int row, int col);
 
-
     /**
      * Return a list of positions (row, column) that the chess needs to pass
      * if it wants to kill the other piece
@@ -191,8 +190,8 @@ public abstract class AbstractChessPiece implements ChessPiece{
         int colIncrement = Integer.compare(col, this.getColumn());
 
         List<List<Integer>> path = new ArrayList<>();
-        while (Math.abs(row - this.getRow()) > 1
-                && Math.abs(col - this.getColumn()) > 1
+        while ((Math.abs(row - this.getRow()) > 1
+                || Math.abs(col - this.getColumn()) > 1)
                 && withinRange(row, col)){
 
             row += rowIncrement;
