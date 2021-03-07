@@ -186,8 +186,8 @@ public abstract class AbstractChessPiece implements ChessPiece{
     public List<List<Integer>> positionInBetween(int row, int col){
         // get the horizontal and vertical increment in order
         // to move from this position to the position given
-        int rowIncrement = Integer.compare(row, this.getRow());
-        int colIncrement = Integer.compare(col, this.getColumn());
+        int rowIncrement = Integer.compare(this.getRow(), row);
+        int colIncrement = Integer.compare(this.getColumn(), col);
 
         List<List<Integer>> path = new ArrayList<>();
         while ((Math.abs(row - this.getRow()) > 1

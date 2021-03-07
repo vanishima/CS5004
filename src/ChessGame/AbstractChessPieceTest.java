@@ -3,6 +3,10 @@ package ChessGame;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -94,6 +98,16 @@ public class AbstractChessPieceTest {
         assertFalse(pawn.canMove(4,3)); // cannot go backwards
         assertFalse(knight.canMove(3,4)); // cannot move in straight line
     }
+
+    @Test
+    public void positionsInBetween(){
+        List<List<Integer>> straightPath = Arrays.asList(Arrays.asList(3,5), Arrays.asList(3,4));
+        assertEquals(straightPath, rook.positionInBetween(3,6));
+
+        List<List<Integer>> diagonalPath = Arrays.asList(Arrays.asList(5,1), Arrays.asList(4,2));
+        assertEquals(diagonalPath, bishop.positionInBetween(6,0));
+    }
+
 
     @Test
     public void withinRange() {
