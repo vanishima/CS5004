@@ -125,7 +125,7 @@ public class ChessGame {
      * @param col the column index
      * @return the chess piece on that position
      */
-    public ChessPiece getPiece(int row, int col){
+    private ChessPiece getPiece(int row, int col){
         if (!AbstractChessPiece.withinRange(row, col)){
             System.out.println("The index is out of range.");
             return null;
@@ -229,8 +229,8 @@ public class ChessGame {
      * @param row the target row index
      * @param col the target column index
      */
-    public void moveOnBoard(ChessPiece target, int row, int col){
-        System.out.println("move " + target + " to " + row + ", " + col);
+    private void moveOnBoard(ChessPiece target, int row, int col){
+        System.out.println("Move " + target + " to " + row + ", " + col);
         kill(target, row, col);
         board[row][col] = target;
         board[target.getRow()][target.getColumn()] = null;
@@ -243,10 +243,10 @@ public class ChessGame {
      * @param row the row index of victim
      * @param col the col index of victim
      */
-    public void kill(ChessPiece killer, int row, int col){
+    private void kill(ChessPiece killer, int row, int col){
         ChessPiece victim = getPiece(row, col);
         if (victim != null){
-            System.out.println(victim + " is killed");
+            System.out.println(" ***** [NEWS]" +victim + " is killed  *****");
             victim.killed();
         }
     }
