@@ -14,6 +14,9 @@ public class ChessGame {
     private ChessPiece blackKing;
     private Integer currentPlayer; // 1 is white, -1 is black
     // A 2D Array list to store pieces
+    // We don't have a getter or a setter for this variable
+    // because only public methods that strictly checks the legality
+    // of each move are able to change the board
     private ChessPiece[][] board = new ChessPiece[8][8];
 
     /**
@@ -75,7 +78,7 @@ public class ChessGame {
 
         System.out.println("\n\n\n\n\n\n");
         printBoard();
-        changePlayer();  // change the turn to the opponent
+        changePlayer();  // give the turn to the opponent
     }
 
     /**
