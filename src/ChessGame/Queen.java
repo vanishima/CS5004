@@ -25,8 +25,6 @@ public class Queen extends AbstractChessPiece{
      */
     @Override
     public boolean canMove(int row, int col) {
-        return withinRange(row, col)
-                && (moveHorizontalOrVertical(row, col)
-                || moveDiagonal(row, col));
+        return moveHorizontalOrVertical(row, col) || moveDiagonal(row, col);
     }
 }

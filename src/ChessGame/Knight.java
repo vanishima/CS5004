@@ -25,7 +25,6 @@ public class Knight extends AbstractChessPiece{
      */
     @Override
     public boolean canMove(int row, int col) {
-        return AbstractChessPiece.withinRange(row, col)
-                && moveLPattern(row, col);
+        return moveLPattern(row, col);
     }
 }

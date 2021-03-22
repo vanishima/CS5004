@@ -25,7 +25,6 @@ public class Bishop extends AbstractChessPiece{
      */
     @Override
     public boolean canMove(int row, int col) {
-        return AbstractChessPiece.withinRange(row, col)
-                && moveDiagonal(row, col);
+        return moveDiagonal(row, col);
     }
 }

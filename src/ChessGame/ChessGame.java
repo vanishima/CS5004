@@ -101,7 +101,7 @@ public class ChessGame {
      * and belongs to the current player
      * @return the chosen ChessPiece
      */
-    public ChessPiece askForChessPiece(){
+    private ChessPiece askForChessPiece(){
         System.out.println("Choose a piece to move");
         Scanner keyboard = new Scanner(System.in);
         int row = keyboard.nextInt();
@@ -166,14 +166,20 @@ public class ChessGame {
      * @return true if the piece can move to the target position, false otherwise
      */
     public boolean canMoveOnBoard(ChessPiece target, int row, int col){
+        // within range
+        if (!AbstractChessPiece.withinRange(row, col)){
+            System.out.println("The index is out of range.");
+            return false;
+        }
         // a different position
         if (target.getRow().equals(row) && target.getColumn().equals(col)){
             System.out.println("You need to move to a different position");
             return false;
         }
-
+        ChessPiece victim = getPiece(row, col);
         // can move or kill in that direction
-        if (!target.canMove(row, col) || !canKill(target, row, col)) {
+        if ((victim == null && !target.canMove(row, col))
+                || (victim != null && !canKillOnBoard(target, row, col))) {
             System.out.println("This piece cannot move to that position!");
             return false;
         }
@@ -189,7 +195,7 @@ public class ChessGame {
      * @param col the col index of the victim
      * @return true if killer can kill the victim, false otherwise
      */
-    public boolean canKill(ChessPiece killer, int row, int col){
+    public boolean canKillOnBoard(ChessPiece killer, int row, int col){
         ChessPiece victim = getPiece(row, col);
         if (victim == null){ return true; } // if no piece on that position, return true
 

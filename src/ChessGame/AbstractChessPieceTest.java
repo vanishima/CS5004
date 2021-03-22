@@ -92,7 +92,7 @@ public class AbstractChessPieceTest {
         assertTrue(knight.canMove(1,2)); // can move in L pattern
 
         assertFalse(bishop.canMove(3,4)); // cannot move in straight line
-        assertFalse(king.canMove(3,5)); // cannot move more than one unit
+        assertFalse(king.canMove(3,5)); // cannot move more than one step
         assertFalse(queen.canMove(1,2)); // cannot go L pattern
         assertFalse(rook.canMove(4,4)); // cannot go diagonal
         assertFalse(pawn.canMove(4,3)); // cannot go backwards
@@ -122,8 +122,8 @@ public class AbstractChessPieceTest {
      */
     @Test
     public void canKill() {
-        assertFalse(pawn.canMove(2,2)); // cannot move diagonally
-        assertTrue(pawn.canKill(2,2)); // but can kill diagonally
-        assertFalse(pawn.canKill(1,1)); // cannot kill more than one step away
+        assertTrue(bishop.canMove(2,2)); // cannot move diagonally
+        assertTrue(bishop.canKill(2,2)); // but can kill diagonally
+        assertFalse(bishop.canKill(3,1)); // cannot kill more than one step away
     }
 }

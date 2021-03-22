@@ -132,10 +132,10 @@ public abstract class AbstractChessPiece implements ChessPiece{
      * the target position
      */
     public boolean moveLPattern(int row, int col){
-        int verDistance = Math.abs(this.getRow() - row);
-        int LongDistance = Math.abs(this.getColumn() - col);
-        return (verDistance == 2 && LongDistance == 1)
-                || (verDistance == 1 && LongDistance == 2);
+        int rowDiff = Math.abs(this.getRow() - row);
+        int columnDiff = Math.abs(this.getColumn() - col);
+        return (rowDiff == 2 && columnDiff == 1)
+                || (rowDiff == 1 && columnDiff == 2);
     }
 
     /**

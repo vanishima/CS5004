@@ -25,8 +25,7 @@ public class Pawn extends AbstractChessPiece{
      */
     @Override
     public boolean canMove(int row, int col) {
-        return AbstractChessPiece.withinRange(row, col)
-                && moveAhead(row, col);
+        return moveAhead(row, col);
     }
 
     /**

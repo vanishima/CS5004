@@ -62,12 +62,9 @@ public class Blackjack {
         if (winner != null){
             return true;
         }
-        if (hasBlackJack()){
-            System.out.println("\n**" + winner.getName() + " GOT A BLACKJACK!**\n");
+        if (hasBlackJack()){        // if at least one player has blackjack
             return true;
-        } else if (hasBust()){
-            String loser = (winner.getName().equals("Player") ? "Dealer" : "Player");
-            System.out.println("\n**" + loser + " BUST!**\n");
+        } else if (hasBust()){      // if at least one player bust
             return true;
         } else {
             return player.isStand() && dealer.isStand();
@@ -75,29 +72,37 @@ public class Blackjack {
     }
 
     /**
-     * Returns the winner of the game
-     * @return the winner of the game
+     * Checks whether the game has a winner
+     * @return true if the game has a winner
      */
-    public Player getWinner(){
+    public boolean hasWinner(){
         if (this.winner == null){
             checkPoints();
         }
-        return this.winner;
+        return this.winner != null;
     }
 
     /**
      * Checks whether at least one player has blackjack
-     * @return true if at at least one player has blackjack, false if none or both has blackjack
+     * @return true if at at least one player has blackjack, false if none has blackjack
      */
     public boolean hasBlackJack(){
-        if (player.blackjack() && !dealer.blackjack()){
-            winner = player;
-        } else if (!player.blackjack() && dealer.blackjack()){
-            winner = dealer;
-        } else {
-            return false;
+        boolean playerBlackjack = player.blackjack();
+        boolean dealerBlackjack = dealer.blackjack();
+
+        if (playerBlackjack){
+            System.out.println("\n**" + player.getName() + " GOT A BLACKJACK!**\n");
         }
-        return true;
+        if (dealerBlackjack){
+            System.out.println("\n**" + dealer.getName() + " GOT A BLACKJACK!**\n");
+        }
+
+        if (playerBlackjack != dealerBlackjack){            // only one has blackjack
+            winner = (playerBlackjack) ? player : dealer;
+            return true;
+        }
+        return playerBlackjack;                             // both has blackjack or none has blackjack
+
     }
 
     /**
@@ -105,14 +110,21 @@ public class Blackjack {
      * @return true if at least one player bust, false if none or both bust
      */
     public boolean hasBust(){
-        if (!player.bust() && dealer.bust()){
-            winner = player;
-        } else if (player.bust() && !dealer.bust()){
-            winner = dealer;
-        } else {
-            return false;
+        boolean playerBust = player.bust();
+        boolean dealerBust = dealer.bust();
+
+        if (playerBust){
+            System.out.println("\n** Player BUST!**\n");
         }
-        return true;
+        if (dealerBust){
+            System.out.println("\n** Dealer BUST!**\n");
+        }
+
+        if (playerBust != dealerBust){                      // only one bust
+            winner = (playerBust) ? dealer : player;
+            return true;
+        }
+        return playerBust;                                  // both bust or no one bust
     }
 
     /**
@@ -151,8 +163,8 @@ public class Blackjack {
         this.dealer.showHiddenCard();
         System.out.println("=============== Game is over! ===============");
         showStatus();
-        if (getWinner() != null){
-            System.out.println("\n>>> The final winner is " + getWinner().getName() + "! <<<");
+        if (hasWinner()){
+            System.out.println("\n>>> The final winner is " + winner.getName() + "! <<<");
         } else {
             System.out.println("\nThere is no winner in this game! A tie!");
         }

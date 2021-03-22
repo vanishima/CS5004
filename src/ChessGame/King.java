@@ -25,7 +25,6 @@ public class King extends AbstractChessPiece {
      */
     @Override
     public boolean canMove(int row, int col) {
-        return AbstractChessPiece.withinRange(row, col) &&
-                moveAnyDirection(row, col);
+        return moveAnyDirection(row, col);
     }
 }

@@ -25,7 +25,6 @@ public class Rook extends AbstractChessPiece{
      */
     @Override
     public boolean canMove(int row, int col) {
-        return AbstractChessPiece.withinRange(row, col)
-                && moveHorizontalOrVertical(row, col);
+        return moveHorizontalOrVertical(row, col);
     }
 }
