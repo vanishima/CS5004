@@ -1,10 +1,23 @@
-package BlackJack;
+package Blackjack;
 
 /**
  * An enum type that represents suits in a deck of cards
  */
 enum Suit{
-    CLUBS, DIAMONDS, HEARTS, SPADES
+    CLUBS("\u2663"), DIAMONDS("\u2666"),
+    HEARTS("\u2665"), SPADES("\u2660");
+
+    private String symbol;
+
+    Suit(String theSymbol){
+        this.symbol = theSymbol;
+    }
+
+    @Override
+    public String toString(){
+        return this.symbol;
+    }
+
 }
 
 /**
@@ -18,13 +31,37 @@ enum CardName{
 
     private Integer value;
 
+    /**
+     * Create an enum type with the given value as its value
+     * @param theValue the value of this card
+     */
     CardName(Integer theValue){
         this.value = theValue;
     }
 
+    /**
+     * Returns the numerical value of this card
+     * @return the numerical value of this card
+     */
     public Integer getValue(){
         return this.value;
     }
+
+    /**
+     * Returns the name of card for face cards, and return digits for
+     * other cards.
+     * @return the string that represents this card
+     */
+    @Override
+    public String toString(){
+        if ((this.getValue() > 1 && this.getValue() < 10) ||
+                this == CardName.TEN){
+            return String.valueOf(this.getValue());
+        } else {
+            return this.name();
+        }
+    }
+
 }
 
 /**
@@ -56,17 +93,11 @@ public class Card implements Comparable<Card>{
     }
 
     /**
-     * Returns the name of the card by converting enum to string
-     * @return the name of the card
+     * Returns the CardName type of the card by converting enum to string
+     * @return the CardName of the card
      */
-    public String getCardName(){
-        // return digits for non-face cards
-        if ((this.getValue() > 1 && this.getValue() < 10) ||
-                this.name == CardName.TEN){
-            return String.valueOf(name.getValue());
-        } else {
-            return this.name.toString();
-        }
+    public CardName getCardName(){
+        return this.name;
     }
 
     /**
@@ -101,7 +132,7 @@ public class Card implements Comparable<Card>{
      * @return the suit and name of the card as a string
      */
     public String toString(){
-        return this.getCardName() + "[" + this.getSuit() + "]";
+        return this.getSuit() + " " + this.getCardName();
     }
 
     /**
@@ -117,7 +148,7 @@ public class Card implements Comparable<Card>{
      * @return true if it is ace, false if it is not ace
      */
     public boolean isAce(){
-        return this.getCardName().equals("ACE");
+        return this.getCardName() == CardName.ACE;
     }
 
     /**
@@ -129,5 +160,9 @@ public class Card implements Comparable<Card>{
         System.out.println(c1);
         Card c2 = new Card(Suit.SPADES, CardName.QUEEN);
         System.out.println(c2);
+        System.out.println("\u2665 This should be a Hearts suit symbol.");
+        System.out.println("\u2666 This should be a Diamonds suit symbol.");
+        System.out.println("\u2663 This should be a Clubs suit symbol.");
+        System.out.println("\u2660 This should be a Spades suit symbol.");
     }
 }

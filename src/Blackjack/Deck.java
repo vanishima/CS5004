@@ -1,4 +1,4 @@
-package BlackJack;
+package Blackjack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,6 +82,9 @@ public class Deck {
         this.hiddenCard = hiddenIndex;
     }
 
+    /**
+     * Set the index of the hidden card to -1 so that all cards will be printed
+     */
     public void removeHiddenRestriction(){
         this.hiddenCard = -1;
     }
@@ -119,11 +122,19 @@ public class Deck {
         }
     }
 
+    /**
+     * Returns the total value of this deck. Ace is treated as 1.
+     * @return the total value of this deck.
+     */
     public Integer getTotalValue(){
         return this.totalValue;
     }
 
-
+    /**
+     * Returns the maximum value of this deck by counting Ace as 10
+     * without going over 21
+     * @return the maximum value of this deck below 21
+     */
     public Integer getMaxValue(){
         int tempTotal = getTotalValue();
         for (Card card: cardList){
@@ -156,7 +167,7 @@ public class Deck {
                 for (int i = 0; i < cardList.size() / 6; i++){
                     for (int j = 0; j < 6; j++){
                         if (i != this.hiddenCard){
-                            System.out.print(String.format("%-18s",getCard(i * 6 + j)));
+                            System.out.print(String.format("%-10s",getCard(i * 6 + j)));
                         }
                     }
                     System.out.println("");
@@ -164,13 +175,12 @@ public class Deck {
             } else {
                 for (int i = 0; i <cardList.size(); i++){
                     if (i != this.hiddenCard){
-                        System.out.print(String.format("%-18s",getCard(i)));
+                        System.out.print(String.format("%-10s",getCard(i)));
                     }
                 }
                 System.out.println("");
             }
         }
-//        System.out.println("");
     }
 
     /**

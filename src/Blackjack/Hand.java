@@ -1,6 +1,4 @@
-package BlackJack;
-
-import java.util.Random;
+package Blackjack;
 
 /**
  * A class that represents a hand derived from Deck
@@ -46,6 +44,5 @@ public class Hand extends Deck{
 
         deck.getCardFromDeck(5, hand2);
         deck.printDeck();  // we should have all 52 cards back
-
     }
 }
