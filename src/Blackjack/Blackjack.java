@@ -61,10 +61,8 @@ public class Blackjack {
         if (winner != null){
             return true;
         }
-        if (!hasBlackJack()){   // if at least one player has blackjack
-            if (!hasBust()){    // if at least one player bust
-                return player.isStand() && dealer.isStand();
-            }
+        if (!hasBlackJack() && !hasBust()){   // if at least one player has blackjack or bust
+            return player.isStand() && dealer.isStand();
         }
         return true;
     }
@@ -74,12 +72,10 @@ public class Blackjack {
      * @return true if the game has a winner
      */
     public boolean hasWinner(){
-        if (winner != null){ return true; }     // only one busts or has blackjack  -> has winner
-        if (hasBust() || hasBlackJack()){       // both busts or both has blackjack -> no winner
-            return false;
-        }
-        checkPoints();                          // the one with the highest points -> may have winner
-        return this.winner != null;
+        // only one busts or has blackjack  -> has winner
+        if (winner != null){ return true; }
+        // both busts or both has blackjack -> no winner
+        return !hasBust() && !hasBlackJack() && hasHigherPoints();
     }
 
     /**
@@ -123,7 +119,7 @@ public class Blackjack {
      * Assume that no one has blackjack and no one bust, check the maximum points
      * of each player under 21
      */
-    public void checkPoints(){
+    public boolean hasHigherPoints(){
         System.out.println("\nChecking points...");
         System.out.println("Your maximum points: " + player.getMaxValue());
         System.out.println("Dealer's maximum points: " + dealer.getMaxValue());
@@ -131,7 +127,10 @@ public class Blackjack {
             winner = player;
         } else if (player.getMaxValue() < dealer.getMaxValue()) {
             winner = dealer;
+        } else {
+            return false;
         }
+        return true;
     }
 
     /**
@@ -139,10 +138,11 @@ public class Blackjack {
      * Hide the hidden card of the dealer until game is over.
      */
     public void showStatus(){
-        System.out.println("Your total value is: " + player.totalValue());
+        System.out.println("Your total points is: " + player.totalValue());
         player.showStatus();
+        System.out.println("");
         if (gameIsOver()){
-            System.out.println("Dealer's total value is: " + dealer.totalValue());
+            System.out.println("Dealer's total points is: " + dealer.totalValue());
         }
         dealer.showStatus();
     }

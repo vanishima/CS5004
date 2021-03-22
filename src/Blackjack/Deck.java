@@ -9,7 +9,7 @@ import java.util.Random;
  * A class to represent a deck of cards
  */
 public class Deck {
-    private final List<Card> cardList = new ArrayList<Card>();
+    private List<Card> cards = new ArrayList<Card>();
     private Integer totalValue = 0;
     private Integer hiddenCard = -1;
 
@@ -21,7 +21,7 @@ public class Deck {
         // add 13 cards for each suit
         for (Suit suit : Suit.values()){
             for (CardName name: CardName.values()){
-                this.cardList.add(new Card(suit, name));
+                this.cards.add(new Card(suit, name));
                 this.totalValue += name.getValue();
             }
         }
@@ -52,11 +52,19 @@ public class Deck {
     }
 
     /**
+     * Returns the number of cards in the deck
+     * @return the number of cards in the deck
+     */
+    public Integer getDeckSize(){
+        return this.cards.size();
+    }
+
+    /**
      * Add a Card object to the arraylist deck and update the total value
      * @param theCard the Card object to be added
      */
     public void addCard(Card theCard){
-        cardList.add(theCard);
+        cards.add(theCard);
         totalValue += theCard.getValue();
     }
 
@@ -67,10 +75,10 @@ public class Deck {
      * @throws IndexOutOfBoundsException if index is invalid
      */
     public Card getCard(Integer index) throws IndexOutOfBoundsException{
-        if (index < 0 || index >= cardList.size()){
+        if (index < 0 || index >= cards.size()){
             throw new IndexOutOfBoundsException();
         }
-        return cardList.get(index);
+        return cards.get(index);
     }
 
     /**
@@ -78,8 +86,7 @@ public class Deck {
      */
     public void setHiddenCard(){
         Random rand = new Random();
-        int hiddenIndex = rand.nextInt(this.cardList.size());
-        this.hiddenCard = hiddenIndex;
+        this.hiddenCard = rand.nextInt(this.cards.size());
     }
 
     /**
@@ -94,14 +101,14 @@ public class Deck {
      */
     public void shuffle(){
         Random rand = new Random();
-        for (int i = 0; i < cardList.size(); i++){
-            // generate two numbers from 0 to cardList.size()-1
-            int card1 = rand.nextInt(cardList.size());
-            int card2 = rand.nextInt(cardList.size());
+        for (int i = 0; i < cards.size(); i++){
+            // generate two numbers from 0 to cards.size()-1
+            int card1 = rand.nextInt(cards.size());
+            int card2 = rand.nextInt(cards.size());
             // swap these two cards
             Card temp = getCard(card1);
-            cardList.set(card1, getCard(card2));
-            cardList.set(card2, temp);
+            cards.set(card1, getCard(card2));
+            cards.set(card2, temp);
         }
     }
 
@@ -111,13 +118,13 @@ public class Deck {
      * @return the first card stored in the Arraylist
      */
     public Card removeCard(){
-        if (cardList.size() == 0){
+        if (cards.size() == 0){
             System.out.println("** EMPTY DECK **");
             return null;
         } else {
-            Card card = cardList.get(0);
+            Card card = cards.get(0);
             this.totalValue -= card.getValue();
-            cardList.remove(0);
+            cards.remove(0);
             return card;
         }
     }
@@ -137,7 +144,7 @@ public class Deck {
      */
     public Integer getMaxValue(){
         int tempTotal = getTotalValue();
-        for (Card card: cardList){
+        for (Card card: cards){
             // if there is an Ace and the total value is less than 12
             // add additional 9 to the total value
             if (card.isAce() && tempTotal < 12){
@@ -152,19 +159,19 @@ public class Deck {
      * Sort the cards in the deck ordered by name
      */
     public void sort(){
-        Collections.sort(cardList);
+        Collections.sort(cards);
     }
 
     /**
      * Print all cards in the deck except the hidden one
      */
     public void printDeck(){
-        if (cardList.size() == 0){
+        if (getDeckSize() == 0){
             System.out.println("** EMPTY DECK **");
         } else {
-            System.out.print(cardList.size() + " cards in this deck: ");
-            if (cardList.size() >= 6){
-                for (int i = 0; i < cardList.size() / 6; i++){
+            System.out.print(getDeckSize() + " cards in this deck: ");
+            if (cards.size() >= 6){
+                for (int i = 0; i < getDeckSize() / 6; i++){
                     for (int j = 0; j < 6; j++){
                         if (i != this.hiddenCard){
                             System.out.print(String.format("%-10s",getCard(i * 6 + j)));
@@ -173,7 +180,7 @@ public class Deck {
                     System.out.println("");
                 }
             } else {
-                for (int i = 0; i <cardList.size(); i++){
+                for (int i = 0; i < getDeckSize(); i++){
                     if (i != this.hiddenCard){
                         System.out.print(String.format("%-10s",getCard(i)));
                     }
@@ -191,7 +198,7 @@ public class Deck {
         Deck deck = new Deck();
         deck.shuffle();
         deck.sort();
-        System.out.println("deck size=" + deck.cardList.size());
+        System.out.println("deck size=" + deck.cards.size());
         deck.printDeck();
     }
 }

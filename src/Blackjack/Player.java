@@ -68,12 +68,11 @@ public class Player {
      * @return true if the cards are over 21, false if less than or equal to 21
      */
     public boolean bust(){
-        if (totalValue() >= 21){
+        if (this.cards.bust()){
             this.stand = true;
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -81,14 +80,11 @@ public class Player {
      * @return true if there is a blackjack, false if not
      */
     public boolean blackjack(){
-         // if total value is 11 and there is an Ace
-        if (cards.getTotalValue() == 11 &&
-                (cards.getCard(0).isAce() || cards.getCard(1).isAce())){
-            this.stand();
+        if (this.cards.blackjack()){
+            this.stand = true;
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
