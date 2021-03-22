@@ -23,6 +23,34 @@ public class Blackjack {
     }
 
     /**
+     * Ask the player and the dealer to hit or stand until game is over
+     */
+    public void gamePlay(){
+        while (!gameIsOver()){
+            System.out.println("\n=============== Current cards ===============");
+            showStatus();
+            System.out.println("\n================ A new turn ================");
+            playerPlay(player);
+            playerPlay(dealer);
+        }
+    }
+
+    /**
+     * If the player did not choose to stand in the last round,
+     * ask her to decide to hit or stand in this round
+     * @param player the current player
+     */
+    public void playerPlay(Player player){
+        if (player.isStand()){ return; }
+        System.out.println(">>" + player.getName() +"'s turn");
+        if (player.chooseToHit()){
+            player.hit(this.deck);
+        } else {
+            player.stand();
+        }
+    }
+
+    /**
      * Check whether the game is over. There could be three situations.
      * 1) at least a player has blackjack
      * 2) at least a player busts
@@ -103,7 +131,7 @@ public class Blackjack {
     }
 
     /**
-     * Print out the cards and total value of both player and dealer.
+     * Print out the cards and total value of both player and dealer (one card is hidden).
      * Hide the hidden card of the dealer until game is over.
      */
     public void showStatus(){
@@ -116,14 +144,17 @@ public class Blackjack {
     }
 
     /**
-     * Select a player(dealer or player) to decide to hit or stand
-     * @param player the current player
+     * Print out all the cards of both player and show if there is a winner
+     * of the game is a tie.
      */
-    public void play(Player player){
-        if (player.chooseToHit()){
-            player.hit(this.deck);
+    private void showEnding(){
+        this.dealer.showHiddenCard();
+        System.out.println("=============== Game is over! ===============");
+        showStatus();
+        if (getWinner() != null){
+            System.out.println("\n>>> The final winner is " + getWinner().getName() + "! <<<");
         } else {
-            player.stand();
+            System.out.println("\nThere is no winner in this game! A tie!");
         }
     }
 
@@ -147,32 +178,10 @@ public class Blackjack {
             System.out.println("============ Welcome to Blackjack ===========");
             Blackjack game = new Blackjack();
 
-            while (!game.gameIsOver()){
-                System.out.println("\n=============== Current cards ===============");
-                game.showStatus();
-                System.out.println("\n================ A new turn ================");
-                if (!game.player.isStand()){
-                    System.out.println(">> Your turn");
-                    game.play(game.player);
-                }
-                if (!game.dealer.isStand()){
-                    System.out.println("\n>> The dealer's turn");
-                    game.play(game.dealer);
-                }
-            }
+            game.gamePlay();
+            game.showEnding();
 
-            game.dealer.showHiddenCard();
-            System.out.println("=============== Game is over! ===============");
-            game.showStatus();
-            if (game.getWinner() != null){
-                System.out.println("\nThe final winner is " + game.getWinner().getName());
-            } else {
-                System.out.println("\nThere is no winner in this game! A tie!");
-            }
-
-            if (game.endGame()){
-                break;
-            }
+            if (game.endGame()){ break; }
         }
         System.out.println("Thanks for playing Blackjack.");
     }

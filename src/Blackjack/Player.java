@@ -126,11 +126,11 @@ public class Player {
                 }
                 answer = keyboard.nextInt();
                 // keep asking for valid integer (0 or 1)
-                while (answer > 1 || answer < 0){
+                if (answer > 1 || answer < 0){
                     System.out.println("Please enter 0 to stand, 1 to hit.");
-                    answer = keyboard.nextInt();
+                } else {
+                    break;  // only break when the input is either 0 or 1
                 }
-                break;  // only break when the input is either 0 or 1
             }
             return answer == 1;
         }
