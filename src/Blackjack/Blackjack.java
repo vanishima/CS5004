@@ -58,17 +58,15 @@ public class Blackjack {
      * @return true if game is over, false if game is still going on
      */
     public boolean gameIsOver(){
-        // to print out the dealer's hidden card
         if (winner != null){
             return true;
         }
-        if (hasBlackJack()){        // if at least one player has blackjack
-            return true;
-        } else if (hasBust()){      // if at least one player bust
-            return true;
-        } else {
-            return player.isStand() && dealer.isStand();
+        if (!hasBlackJack()){   // if at least one player has blackjack
+            if (!hasBust()){    // if at least one player bust
+                return player.isStand() && dealer.isStand();
+            }
         }
+        return true;
     }
 
     /**
@@ -76,9 +74,11 @@ public class Blackjack {
      * @return true if the game has a winner
      */
     public boolean hasWinner(){
-        if (this.winner == null){
-            checkPoints();
+        if (winner != null){ return true; }     // only one busts or has blackjack  -> has winner
+        if (hasBust() || hasBlackJack()){       // both busts or both has blackjack -> no winner
+            return false;
         }
+        checkPoints();                          // the one with the highest points -> may have winner
         return this.winner != null;
     }
 
@@ -90,12 +90,8 @@ public class Blackjack {
         boolean playerBlackjack = player.blackjack();
         boolean dealerBlackjack = dealer.blackjack();
 
-        if (playerBlackjack){
-            System.out.println("\n**" + player.getName() + " GOT A BLACKJACK!**\n");
-        }
-        if (dealerBlackjack){
-            System.out.println("\n**" + dealer.getName() + " GOT A BLACKJACK!**\n");
-        }
+        if (playerBlackjack){ System.out.println("\n** Player GOT A BLACKJACK!**\n"); }
+        if (dealerBlackjack){ System.out.println("\n** Dealer GOT A BLACKJACK!**\n"); }
 
         if (playerBlackjack != dealerBlackjack){            // only one has blackjack
             winner = (playerBlackjack) ? player : dealer;
@@ -113,12 +109,8 @@ public class Blackjack {
         boolean playerBust = player.bust();
         boolean dealerBust = dealer.bust();
 
-        if (playerBust){
-            System.out.println("\n** Player BUST!**\n");
-        }
-        if (dealerBust){
-            System.out.println("\n** Dealer BUST!**\n");
-        }
+        if (playerBust){ System.out.println("\n** Player BUST!**\n"); }
+        if (dealerBust){ System.out.println("\n** Dealer BUST!**\n"); }
 
         if (playerBust != dealerBust){                      // only one bust
             winner = (playerBust) ? dealer : player;
@@ -176,7 +168,7 @@ public class Blackjack {
      */
     public boolean endGame(){
         Scanner keyboard = new Scanner(System.in);
-        System.out.println("\n\n.\n.\n.\n\nDo you want to play again? y/n");
+        System.out.println("\n.\n.\n.\n\nDo you want to play again? y/n");
         String ans = keyboard.nextLine();
         return ans.equals("n");
     }
