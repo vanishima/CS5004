@@ -46,18 +46,12 @@ public class Blackjack {
      * @return true if at at least one player has blackjack, false if none has blackjack
      */
     public boolean hasBlackJackWinner(){
-        boolean playerBlackjack = player.blackjack();
-        boolean dealerBlackjack = dealer.blackjack();
-
-        if (playerBlackjack){ System.out.println("\n** Player GOT A BLACKJACK!**\n"); }
-        if (dealerBlackjack){ System.out.println("\n** Dealer GOT A BLACKJACK!**\n"); }
-
-        if (playerBlackjack != dealerBlackjack){            // only one has blackjack
-            winner = (playerBlackjack) ? player : dealer;
+        if (player.blackjack() != dealer.blackjack()){
+            winner = (player.blackjack()) ? player : dealer;
+            System.out.println("\n** " + winner.getName() + " HAS A BLACKJACK! **");
             return true;
         }
-        return false;                             // both has blackjack or none has blackjack
-
+        return false;
     }
 
     /**
@@ -65,17 +59,12 @@ public class Blackjack {
      * @return true if at least one player bust, false if none or both bust
      */
     public boolean hasBustWinner(){
-        boolean playerBust = player.bust();
-        boolean dealerBust = dealer.bust();
-
-        if (playerBust){ System.out.println("\n** Player BUST!**\n"); }
-        if (dealerBust){ System.out.println("\n** Dealer BUST!**\n"); }
-
-        if (playerBust != dealerBust){                      // only one bust
-            winner = (playerBust) ? dealer : player;
+        if (player.bust() != dealer.bust()){
+            winner = (player.bust()) ? dealer : player;
+            System.out.println("\n** " + winner.getName() + " BUST! **");
             return true;
         }
-        return false;                                  // both bust or no one bust
+        return false;
     }
 
     /**
@@ -113,7 +102,7 @@ public class Blackjack {
     private void showEnding(){
         System.out.println("\n\n=============== Game is over! ===============");
         showStatus();
-        if (hasWinner()){
+        if (hasWinner() && winner != null){
             System.out.println("\n>>> The final winner is " + winner.getName() + "! <<<");
         } else {
             System.out.println("\nThere is no winner in this game! A tie!");

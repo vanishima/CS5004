@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Player {
     private Hand cards;
     private String name = "Player";
-//    private boolean stand = false;
 
     /**
      * Create a player with 2 cards taken from a source deck
@@ -63,7 +62,7 @@ public class Player {
      * @return true if the cards are over 21, false if less than or equal to 21
      */
     public boolean bust(){
-        return this.cards.bust();
+        return cards.bust();
     }
 
     /**
@@ -71,7 +70,7 @@ public class Player {
      * @return true if there is a blackjack, false if not
      */
     public boolean blackjack(){
-        return this.cards.blackjack();
+        return cards.blackjack();
     }
 
     /**
@@ -79,15 +78,15 @@ public class Player {
      * @return the total value of the hand
      */
     public Integer totalValue(){
-        return this.cards.getTotalValue();
+        return cards.getTotalValue();
     }
 
     /**
      * Returns the maximum value of the hand this player has
-     * @return
+     * @return the maximum value of the hand
      */
     public Integer getMaxValue(){
-        return this.cards.getMaxValue();
+        return cards.getMaxValue();
     }
 
     /**
@@ -125,7 +124,7 @@ public class Player {
      */
     public void showStatus(){
         System.out.println(">> " + this.name + "'s hand");
-        if (getName() != "Dealer"){
+        if (!getName().equals("Dealer")){
             System.out.println(getName() + "'s total points: " + totalValue());
         }
         this.cards.printDeck();

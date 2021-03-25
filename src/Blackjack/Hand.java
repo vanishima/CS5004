@@ -15,10 +15,10 @@ public class Hand extends Deck{
     /**
      * Create a hand with given number of cards, all removed from a bigger deck
      * @param numOfCards the number of cards will be added to the hand
-     * @param biggerDeck the deck where the hand gets the card
+     * @param sourceDeck the deck where the hand gets the card
      */
-    public Hand(Integer numOfCards, Deck biggerDeck){
-        super(numOfCards, biggerDeck);
+    public Hand(Integer numOfCards, Deck sourceDeck){
+        super(numOfCards, sourceDeck);
     }
 
     /**
@@ -27,8 +27,8 @@ public class Hand extends Deck{
      * @return true if the hand has a blackjack, false if not
      */
     public boolean blackjack(){
-        return this.getDeckSize() == 2 &&
-                (this.getCard(0).isAce() || this.getCard(1).isAce());
+        return getDeckSize() == 2 &&
+                (getCard(0).isAce() || getCard(1).isAce());
     }
 
     /**
@@ -36,7 +36,7 @@ public class Hand extends Deck{
      * @return true if the cards are over 21, false if less than or equal to 21
      */
     public boolean bust(){
-        return getTotalValue() >= 21;
+        return getTotalValue() > 21;
     }
 
     /**
@@ -61,6 +61,6 @@ public class Hand extends Deck{
         deck.printDeck();  // we should have 47 cards now
 
         deck.getCardFromDeck(5, hand2);
-        deck.printDeck();  // we should have all 52 cards back
+        deck.printDeck();  // we should have all 52 cards now
     }
 }
