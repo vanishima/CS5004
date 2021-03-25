@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Player {
     private Hand cards;
     private String name = "Player";
-    private boolean stand = false;
+//    private boolean stand = false;
 
     /**
      * Create a player with 2 cards taken from a source deck
@@ -24,11 +24,20 @@ public class Player {
     }
 
     /**
-     * Checks whether this player choose to stand
-     * @return true if stand, false, if not stand
+     * If the player did not choose to stand in the last round,
+     * ask her to decide to hit or stand in this round
+     * @param sourceDeck the deck from where new cards come from
      */
-    public boolean isStand(){
-        return this.stand;
+    public void turn(Deck sourceDeck){
+        System.out.println("========" + getName() + "'s Turn ========");
+        while (!blackjack() && !bust()) {
+            if (chooseToHit()) {
+                hit(sourceDeck);
+            } else {
+                break;
+            }
+        }
+        cards.removeHiddenRestriction(); // Remove the hidden card restriction of the dealer player
     }
 
     /**
@@ -44,23 +53,9 @@ public class Player {
      * @param sourceDeck the deck where cards are taken from
      */
     public void hit(Deck sourceDeck){
-        System.out.println(this.getName() + " HIT!");
+        System.out.println(this.getName() + " HIT!\n");
         cards.getCardFromDeck(1, sourceDeck);
-    }
-
-    /**
-     * Change the stand variable to true.
-     */
-    public void stand(){
-        System.out.println(this.getName() + " STAND!");
-        this.stand = true;
-    }
-
-    /**
-     * Remove the hidden card restriction of the dealer player
-     */
-    public void showHiddenCard(){
-        this.cards.removeHiddenRestriction();
+        showStatus();
     }
 
     /**
@@ -68,11 +63,7 @@ public class Player {
      * @return true if the cards are over 21, false if less than or equal to 21
      */
     public boolean bust(){
-        if (this.cards.bust()){
-            this.stand = true;
-            return true;
-        }
-        return false;
+        return this.cards.bust();
     }
 
     /**
@@ -80,11 +71,7 @@ public class Player {
      * @return true if there is a blackjack, false if not
      */
     public boolean blackjack(){
-        if (this.cards.blackjack()){
-            this.stand = true;
-            return true;
-        }
-        return false;
+        return this.cards.blackjack();
     }
 
     /**
@@ -138,6 +125,9 @@ public class Player {
      */
     public void showStatus(){
         System.out.println(">> " + this.name + "'s hand");
+        if (getName() != "Dealer"){
+            System.out.println(getName() + "'s total points: " + totalValue());
+        }
         this.cards.printDeck();
     }
 }

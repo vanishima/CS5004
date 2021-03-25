@@ -26,45 +26,10 @@ public class Blackjack {
      * Ask the player and the dealer to hit or stand until game is over
      */
     public void gamePlay(){
-        while (!gameIsOver()){
-            System.out.println("\n=============== Current cards ===============");
-            showStatus();
-            System.out.println("\n================ A new turn ================");
-            playerPlay(player);
-            playerPlay(dealer);
-        }
-    }
-
-    /**
-     * If the player did not choose to stand in the last round,
-     * ask her to decide to hit or stand in this round
-     * @param player the current player
-     */
-    public void playerPlay(Player player){
-        if (player.isStand()){ return; }
-        System.out.println(">>" + player.getName() +"'s turn");
-        if (player.chooseToHit()){
-            player.hit(this.deck);
-        } else {
-            player.stand();
-        }
-    }
-
-    /**
-     * Check whether the game is over. There could be three situations.
-     * 1) at least a player has blackjack
-     * 2) at least a player busts
-     * 3) both player stands
-     * @return true if game is over, false if game is still going on
-     */
-    public boolean gameIsOver(){
-        if (winner != null){
-            return true;
-        }
-        if (!hasBlackJack() && !hasBust()){   // if at least one player has blackjack or bust
-            return player.isStand() && dealer.isStand();
-        }
-        return true;
+        System.out.println("\n=============== Current cards ===============");
+        showStatus();
+        player.turn(deck);
+        dealer.turn(deck);
     }
 
     /**
@@ -72,17 +37,15 @@ public class Blackjack {
      * @return true if the game has a winner
      */
     public boolean hasWinner(){
-        // only one busts or has blackjack  -> has winner
-        if (winner != null){ return true; }
-        // both busts or both has blackjack -> no winner
-        return !hasBust() && !hasBlackJack() && hasHigherPoints();
+        // if only one player has blackjack, only one player bust, or a player has higher score
+        return hasBlackJackWinner() || hasBustWinner() || hasHigherPointsWinner();
     }
 
     /**
      * Checks whether at least one player has blackjack
      * @return true if at at least one player has blackjack, false if none has blackjack
      */
-    public boolean hasBlackJack(){
+    public boolean hasBlackJackWinner(){
         boolean playerBlackjack = player.blackjack();
         boolean dealerBlackjack = dealer.blackjack();
 
@@ -93,7 +56,7 @@ public class Blackjack {
             winner = (playerBlackjack) ? player : dealer;
             return true;
         }
-        return playerBlackjack;                             // both has blackjack or none has blackjack
+        return false;                             // both has blackjack or none has blackjack
 
     }
 
@@ -101,7 +64,7 @@ public class Blackjack {
      * Checks whether at least one player bust
      * @return true if at least one player bust, false if none or both bust
      */
-    public boolean hasBust(){
+    public boolean hasBustWinner(){
         boolean playerBust = player.bust();
         boolean dealerBust = dealer.bust();
 
@@ -112,14 +75,14 @@ public class Blackjack {
             winner = (playerBust) ? dealer : player;
             return true;
         }
-        return playerBust;                                  // both bust or no one bust
+        return false;                                  // both bust or no one bust
     }
 
     /**
      * Assume that no one has blackjack and no one bust, check the maximum points
      * of each player under 21
      */
-    public boolean hasHigherPoints(){
+    public boolean hasHigherPointsWinner(){
         System.out.println("\nChecking points...");
         System.out.println("Your maximum points: " + player.getMaxValue());
         System.out.println("Dealer's maximum points: " + dealer.getMaxValue());
@@ -138,12 +101,8 @@ public class Blackjack {
      * Hide the hidden card of the dealer until game is over.
      */
     public void showStatus(){
-        System.out.println("Your total points is: " + player.totalValue());
         player.showStatus();
         System.out.println("");
-        if (gameIsOver()){
-            System.out.println("Dealer's total points is: " + dealer.totalValue());
-        }
         dealer.showStatus();
     }
 
@@ -152,8 +111,7 @@ public class Blackjack {
      * of the game is a tie.
      */
     private void showEnding(){
-        this.dealer.showHiddenCard();
-        System.out.println("=============== Game is over! ===============");
+        System.out.println("\n\n=============== Game is over! ===============");
         showStatus();
         if (hasWinner()){
             System.out.println("\n>>> The final winner is " + winner.getName() + "! <<<");
