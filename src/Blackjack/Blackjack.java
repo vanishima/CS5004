@@ -36,42 +36,48 @@ public class Blackjack {
      * Checks whether the game has a winner
      * @return true if the game has a winner
      */
-    public boolean hasWinner(){
+    public Player getWinner(){
         // if only one player has blackjack, only one player bust, or a player has higher score
-        return hasBlackJackWinner() || hasBustWinner() || hasHigherPointsWinner();
+        if (!hasBlackJack()){
+            if (!hasBust()){
+                if (!hasHigherPoints()){
+                    return null;
+                }
+            }
+        }
+        return winner;
     }
 
     /**
      * Checks whether at least one player has blackjack
      * @return true if at at least one player has blackjack, false if none has blackjack
      */
-    public boolean hasBlackJackWinner(){
+    public boolean hasBlackJack(){
         if (player.blackjack() != dealer.blackjack()){
             winner = (player.blackjack()) ? player : dealer;
-            System.out.println("\n** " + winner.getName() + " HAS A BLACKJACK! **");
-            return true;
+            System.out.println("\n>>> " + winner.getName() + " HAS A BLACKJACK! <<<");
         }
-        return false;
+        return player.blackjack() || dealer.blackjack();
     }
 
     /**
      * Checks whether at least one player bust
      * @return true if at least one player bust, false if none or both bust
      */
-    public boolean hasBustWinner(){
+    public boolean hasBust(){
         if (player.bust() != dealer.bust()){
-            winner = (player.bust()) ? dealer : player;
-            System.out.println("\n** " + winner.getName() + " BUST! **");
-            return true;
+            Player loser = (player.bust()) ? player : dealer;
+            winner = (loser.equals(player)) ? dealer : player;
+            System.out.println("\n>>> " + loser.getName() + " BUST with a total of " + loser.totalValue() + "! <<<");
         }
-        return false;
+        return player.bust() || dealer.bust();
     }
 
     /**
      * Assume that no one has blackjack and no one bust, check the maximum points
      * of each player under 21
      */
-    public boolean hasHigherPointsWinner(){
+    public boolean hasHigherPoints(){
         System.out.println("\nChecking points...");
         System.out.println("Your maximum points: " + player.getMaxValue());
         System.out.println("Dealer's maximum points: " + dealer.getMaxValue());
@@ -102,7 +108,7 @@ public class Blackjack {
     private void showEnding(){
         System.out.println("\n\n=============== Game is over! ===============");
         showStatus();
-        if (hasWinner() && winner != null){
+        if (getWinner() != null){
             System.out.println("\n>>> The final winner is " + winner.getName() + "! <<<");
         } else {
             System.out.println("\nThere is no winner in this game! A tie!");

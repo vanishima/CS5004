@@ -1,9 +1,12 @@
 package Blackjack;
 
+import java.util.Random;
+
 /**
  * A class that represents a hand derived from Deck
  */
 public class Hand extends Deck{
+    Integer hiddenCard = -1;
 
     /**
      * Create a Hand object with zero cards
@@ -23,11 +26,12 @@ public class Hand extends Deck{
 
     /**
      * Checks if the hand has a blackjack.
-     * When there is only two cards in the deck and there is an Ace
+     * When there is only two cards in the deck with a total value of 11,
+     * and there is an Ace
      * @return true if the hand has a blackjack, false if not
      */
     public boolean blackjack(){
-        return getDeckSize() == 2 &&
+        return getTotalValue() == 11 && getDeckSize() == 2 &&
                 (getCard(0).isAce() || getCard(1).isAce());
     }
 
@@ -40,27 +44,58 @@ public class Hand extends Deck{
     }
 
     /**
+     * Randomly select a card and set it as the hidden card
+     */
+    public void setHiddenCard(){
+        Random rand = new Random();
+        this.hiddenCard = rand.nextInt(this.getDeckSize());
+    }
+
+    /**
+     * Set the index of the hidden card to -1 so that all cards will be printed
+     */
+    public void removeHiddenRestriction(){
+        this.hiddenCard = -1;
+    }
+
+    /**
+     * Print all cards in the deck except the hidden card
+     */
+    @Override
+    public String toString(){
+        System.out.print(getDeckSize() + " cards in this hand:\n");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < getDeckSize(); i++){
+            if (i != this.hiddenCard){
+                sb.append(String.format("%-10s",getCard(i)));
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    /**
      * A demo method to test methods in the Hand class
      * @param args
      */
     public static void main(String[] args){
         Deck deck = new Deck();
         deck.sort();
-        deck.printDeck();
+        System.out.println(deck);
 
         // create two hands each with 5 cards
         Hand hand1 = new Hand(5, deck);
         Hand hand2 = new Hand(5, deck);
 
-        hand1.printDeck();
-        hand2.printDeck();
+        System.out.println(hand1);
+        System.out.println(hand2);
 
-        deck.printDeck();  // now we only have 42 cards in this deck
+        System.out.println(deck);  // now we only have 42 cards in this deck
 
         deck.getCardFromDeck(5, hand1);
-        deck.printDeck();  // we should have 47 cards now
+        System.out.println(deck);  // we should have 47 cards now
 
         deck.getCardFromDeck(5, hand2);
-        deck.printDeck();  // we should have all 52 cards now
+        System.out.println(deck);  // we should have all 52 cards now
     }
 }

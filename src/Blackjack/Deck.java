@@ -11,7 +11,6 @@ import java.util.Random;
 public class Deck {
     private List<Card> cards = new ArrayList<Card>();
     private Integer totalValue = 0;
-    private Integer hiddenCard = -1;
 
     /**
      * Create a Deck object and add 52 new cards
@@ -52,20 +51,28 @@ public class Deck {
     }
 
     /**
-     * Returns the number of cards in the deck
-     * @return the number of cards in the deck
-     */
-    public Integer getDeckSize(){
-        return this.cards.size();
-    }
-
-    /**
      * Add a Card object to the arraylist deck and update the total value
      * @param theCard the Card object to be added
      */
     public void addCard(Card theCard){
         cards.add(theCard);
         totalValue += theCard.getValue();
+    }
+
+    /**
+     * Removes the first card stored in the Arraylist, deduct its value from total value
+     * and return the card
+     * @return the first card stored in the Arraylist
+     */
+    public Card removeCard() throws IllegalStateException{
+        if (cards.size() == 0){
+            throw new IllegalStateException("** EMPTY DECK **");
+        } else {
+            Card card = cards.get(0);
+            this.totalValue -= card.getValue();
+            cards.remove(0);
+            return card;
+        }
     }
 
     /**
@@ -79,21 +86,6 @@ public class Deck {
             throw new IndexOutOfBoundsException();
         }
         return cards.get(index);
-    }
-
-    /**
-     * Randomly select a card and set it as the hidden card
-     */
-    public void setHiddenCard(){
-        Random rand = new Random();
-        this.hiddenCard = rand.nextInt(this.cards.size());
-    }
-
-    /**
-     * Set the index of the hidden card to -1 so that all cards will be printed
-     */
-    public void removeHiddenRestriction(){
-        this.hiddenCard = -1;
     }
 
     /**
@@ -113,20 +105,34 @@ public class Deck {
     }
 
     /**
-     * Removes the first card stored in the Arraylist, deduct its value from total value
-     * and return the card
-     * @return the first card stored in the Arraylist
+     * Returns the number of cards in the deck
+     * @return the number of cards in the deck
      */
-    public Card removeCard(){
-        if (cards.size() == 0){
-            System.out.println("** EMPTY DECK **");
-            return null;
-        } else {
-            Card card = cards.get(0);
-            this.totalValue -= card.getValue();
-            cards.remove(0);
-            return card;
+    public Integer getDeckSize(){
+        return this.cards.size();
+    }
+
+    /**
+     * Sort the cards in the deck ordered by name
+     */
+    public void sort(){
+        Collections.sort(cards);
+    }
+
+    /**
+     * Print all cards in the deck and display the number of cards
+     */
+    @Override
+    public String toString(){
+        System.out.print(getDeckSize() + " cards in this deck:\n");
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < getDeckSize() / 6; i++){
+            for (int j = 0; j < 6; j++){
+                string.append(String.format("%-10s", getCard(i * 6 + j)));
+            }
+            string.append("\n");
         }
+        return string.toString();
     }
 
     /**
@@ -156,41 +162,6 @@ public class Deck {
     }
 
     /**
-     * Sort the cards in the deck ordered by name
-     */
-    public void sort(){
-        Collections.sort(cards);
-    }
-
-    /**
-     * Print all cards in the deck except the hidden one
-     */
-    public void printDeck(){
-        if (getDeckSize() == 0){
-            System.out.println("** EMPTY DECK **");
-        } else {
-            System.out.print(getDeckSize() + " cards in this deck: ");
-            if (cards.size() >= 6){
-                for (int i = 0; i < getDeckSize() / 6; i++){
-                    for (int j = 0; j < 6; j++){
-                        if (i != this.hiddenCard){
-                            System.out.print(String.format("%-10s",getCard(i * 6 + j)));
-                        }
-                    }
-                    System.out.println("");
-                }
-            } else {
-                for (int i = 0; i < getDeckSize(); i++){
-                    if (i != this.hiddenCard){
-                        System.out.print(String.format("%-10s",getCard(i)));
-                    }
-                }
-                System.out.println("");
-            }
-        }
-    }
-
-    /**
      * A demo method to test methods in the Deck class
      * @param args
      */
@@ -199,6 +170,6 @@ public class Deck {
         deck.shuffle();
         deck.sort();
         System.out.println("deck size=" + deck.cards.size());
-        deck.printDeck();
+        System.out.println(deck);
     }
 }

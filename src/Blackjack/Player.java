@@ -97,25 +97,26 @@ public class Player {
         if (this.name.equals("Dealer")){
             return totalValue() < 17;
         } else {
-            Scanner keyboard = new Scanner(System.in);
-            System.out.println("Do you want to hit or stand? 1 for yes, 0 for no.");
-            int answer;
-            while (true){
-                // keep asking for integer input
-                while (!keyboard.hasNextInt()){
-                    System.out.println("Please enter 0 to stand, 1 to hit.");
-                    keyboard.next();
-                }
-                answer = keyboard.nextInt();
-                // keep asking for valid integer (0 or 1)
-                if (answer > 1 || answer < 0){
-                    System.out.println("Please enter 0 to stand, 1 to hit.");
-                } else {
-                    break;  // only break when the input is either 0 or 1
-                }
-            }
-            return answer == 1;
+            return getValidHitAnswer() == 1;
         }
+    }
+
+    /**
+     * Keep asking for user input until 1 or 0 is entered
+     * @return 1 or 0 entered by the user
+     */
+    public int getValidHitAnswer(){
+        int answer = -1;
+        Scanner keyboard = new Scanner(System.in);
+        while (answer < 0 || answer > 1){
+            System.out.println("Please enter 0 to stand, 1 to hit.");
+            if (keyboard.hasNextInt()){
+                answer = keyboard.nextInt();
+            } else {
+                keyboard.next();
+            }
+        }
+        return answer;
     }
 
     /**
@@ -127,6 +128,6 @@ public class Player {
         if (!getName().equals("Dealer")){
             System.out.println(getName() + "'s total points: " + totalValue());
         }
-        this.cards.printDeck();
+        System.out.println(cards);
     }
 }
